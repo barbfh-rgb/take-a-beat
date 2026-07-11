@@ -508,15 +508,11 @@
       <p class="seed-line" id="seed-line">No draw yet.</p>
     </details>
 
-    <p class="reading-greeting" id="reading-greeting"></p>
-
     <div class="stage" id="stage"></div>
 
     <p class="flow-line" id="flow-line"></p>
 
     <div class="reading-panel" id="reading-panel"></div>
-
-    <p class="reading-signoff" id="reading-signoff"></p>
   </div>
 
 <script>
@@ -546,7 +542,7 @@
       return;
     }
     if (input.value === GATE_PASSCODE) {
-      sessionStorage.setItem(BUYER_NAME_KEY, name);
+      localStorage.setItem(BUYER_NAME_KEY, name);
       localStorage.setItem(GATE_STORAGE_KEY, "yes");
       document.body.classList.remove("is-locked");
     } else {
@@ -557,7 +553,7 @@
   });
 
   function getBuyerName() {
-    return sessionStorage.getItem(BUYER_NAME_KEY) || "";
+    return localStorage.getItem(BUYER_NAME_KEY) || sessionStorage.getItem(BUYER_NAME_KEY) || "";
   }
 
   // ---- deck data -----------------------------------------------------
@@ -763,8 +759,6 @@
   const flowLine = document.getElementById("flow-line");
   const seedInput = document.getElementById("seed-input");
   const seedLine = document.getElementById("seed-line");
-  const readingGreeting = document.getElementById("reading-greeting");
-  const readingSignoff = document.getElementById("reading-signoff");
   const readingPanel = document.getElementById("reading-panel");
 
   document.getElementById("today-date").textContent = new Date().toLocaleDateString(undefined, {
@@ -820,9 +814,14 @@
     flowLine.textContent = "";
     flowLine.classList.remove("is-liminal");
     seedLine.textContent = "No draw yet.";
-    readingGreeting.textContent = "";
-    readingSignoff.textContent = "";
     readingPanel.innerHTML = "";
+  }
+
+  function panelLine(className, text) {
+    const line = document.createElement("p");
+    line.className = className;
+    line.textContent = text;
+    return line;
   }
 
   function meaningEntry(card, label) {
@@ -842,9 +841,8 @@
     seedLine.textContent = `Seed: ${seed}. Save this to redraw the exact same reading later.`;
 
     const buyerName = getBuyerName();
-    readingGreeting.textContent = `Dear ${buyerName || "Friend"},`;
-    readingSignoff.textContent = "Love Barbara x";
     readingPanel.innerHTML = "";
+    readingPanel.append(panelLine("reading-greeting", `Dear ${buyerName || "Friend"},`));
 
     stage.innerHTML = "";
     flowLine.textContent = "";
@@ -869,6 +867,7 @@
       flowLine.textContent = `${leaving.phrase}… and ${arriving.phrase.charAt(0).toLowerCase()}${arriving.phrase.slice(1)}.`;
 
       readingPanel.append(meaningEntry(leaving, "Leaving"), meaningEntry(arriving, "Arriving"));
+      readingPanel.append(panelLine("reading-signoff", "Love Barbara x"));
       return;
     }
 
@@ -878,6 +877,7 @@
 
     cards.forEach((card) => stage.append(buildCardEl(card)));
     cards.forEach((card) => readingPanel.append(meaningEntry(card)));
+    readingPanel.append(panelLine("reading-signoff", "Love Barbara x"));
     revealAll(stage);
 
     if (count === 1) {
