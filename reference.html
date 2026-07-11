@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Take a Beat: Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gabriela&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #B76E79;
+    --cream: #FFF8EC;
+    --panel: #FFFEF6;
+    --rose: #B76E79;
+    --ink: #3A2429;
+    --ink-soft: rgba(58, 36, 41, 0.72);
+    --shadow-tint: rgba(58, 36, 41, 0.12);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 1.25rem 4rem;
+  }
+
+  h1 {
+    font-family: 'Gabriela', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 5vw, 2.2rem);
+    text-align: center;
+    margin: 0 0 1rem;
+  }
+
+  .nav-grid {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--cream);
+    width: 100%;
+    max-width: 40rem;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.4rem;
+    padding: 0.75rem 0 1rem;
+    border-bottom: 2px solid var(--gold);
+    margin-bottom: 1.5rem;
+  }
+
+  .nav-grid a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    border: 2px solid var(--gold);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .nav-grid a:hover, .nav-grid a:active {
+    background: rgba(183, 110, 121, 0.16);
+  }
+
+  .card-block {
+    width: 100%;
+    max-width: 40rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    border: 2px solid var(--gold);
+    border-radius: 14px;
+    background: var(--panel);
+    scroll-margin-top: 6.5rem;
+  }
+
+  .card-block h2 {
+    font-family: 'Gabriela', Georgia, serif;
+    font-weight: 400;
+    font-size: 1.3rem;
+    margin: 0 0 0.6rem;
+    color: var(--ink);
+  }
+
+  .card-block .statement {
+    margin: 0 0 0.9rem;
+    line-height: 1.6;
+  }
+
+  .card-block .prompt-label {
+    margin: 0 0 0.2rem;
+    font-weight: 700;
+    color: var(--rose);
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .card-block .prompt-text {
+    margin: 0;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 480px) {
+    .nav-grid {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+
+  body.is-locked > *:not(.gate) {
+    display: none;
+  }
+
+  .gate {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: var(--cream);
+    align-items: center;
+    justify-content: center;
+  }
+
+  body.is-locked .gate {
+    display: flex;
+  }
+
+  .gate-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 2rem 2.2rem;
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    background: var(--panel);
+    box-shadow: 0 18px 40px var(--shadow-tint);
+    width: min(90vw, 20rem);
+  }
+
+  .gate-label {
+    font-family: 'Gabriela', Georgia, serif;
+    font-size: 1.15rem;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  .gate-input {
+    font: inherit;
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    border: 2px solid var(--gold);
+    background: var(--panel);
+    color: var(--ink);
+    text-align: center;
+    outline: none;
+  }
+
+  .gate-input:focus {
+    outline: 2px solid var(--rose);
+    outline-offset: 2px;
+  }
+
+  .gate-button {
+    font: inherit;
+    cursor: pointer;
+    width: 100%;
+    border: 2px solid var(--gold);
+    background: var(--gold);
+    color: var(--cream);
+    border-radius: 999px;
+    padding: 0.6rem 1.3rem;
+    font-weight: 700;
+    min-height: 44px;
+  }
+
+  .gate-error {
+    margin: 0;
+    min-height: 1.2em;
+    color: var(--rose);
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body class="is-locked">
+
+  <div class="gate" id="gate">
+    <form class="gate-box" id="gate-form">
+      <p class="gate-label">Enter passcode</p>
+      <input class="gate-input" id="gate-input" type="password" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button class="gate-button" type="submit">Enter</button>
+      <p class="gate-error" id="gate-error"></p>
+    </form>
+  </div>
+
+  <h1>Take a Beat: Reference</h1>
+
+  <nav class="nav-grid" id="nav-grid"></nav>
+
+  <div id="cards"></div>
+
+<script>
+  // ---- passcode gate (casual privacy only, not real security) ---------
+
+  const GATE_PASSCODE = "TAKEABEAT26";
+  const GATE_STORAGE_KEY = "take-a-beat-premium-unlocked";
+
+  if (localStorage.getItem(GATE_STORAGE_KEY) === "yes") {
+    document.body.classList.remove("is-locked");
+  }
+
+  document.getElementById("gate-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const input = document.getElementById("gate-input");
+    const error = document.getElementById("gate-error");
+    if (input.value === GATE_PASSCODE) {
+      localStorage.setItem(GATE_STORAGE_KEY, "yes");
+      document.body.classList.remove("is-locked");
+    } else {
+      error.textContent = "Not quite, try again.";
+      input.value = "";
+      input.focus();
+    }
+  });
+
+  const CARDS = [
+    { n: 1, name: "Take a beat", statement: "Pause here, just for a moment. There is nothing else to do right now except let this instant be enough.", prompt: "What might become clearer if I gave myself one small pause before responding, deciding or doing?" },
+    { n: 2, name: "Arrive here", statement: "Notice that you have arrived, not somewhere else, but here, in this exact place and time.", prompt: "What is true about this exact moment, before I add stories about what should be happening?" },
+    { n: 3, name: "Land softly", statement: "Let your body settle, like something coming gently to rest after being carried a while.", prompt: "Where in my life do I need a gentler landing rather than another push forward?" },
+    { n: 4, name: "Come home", statement: "Return to yourself, to the part of you that does not need to prove or perform anything.", prompt: "What helps me feel most like myself when I have been pulled in too many directions?" },
+    { n: 5, name: "Notice this moment", statement: "Let your attention rest on what is actually happening right now, not what came before or what comes next.", prompt: "What is present around me, within me or beneath the surface that I have not properly noticed yet?" },
+    { n: 6, name: "Settle in", statement: "Allow yourself to get comfortable, as though you are staying a while and there is no rush to leave.", prompt: "What would help me feel a little more comfortable in my own life today?" },
+    { n: 7, name: "Breathe fully", statement: "Let the breath move all the way in and all the way out, without holding back any of it.", prompt: "What have I been holding back that might need a little more room?" },
+    { n: 8, name: "Slow the breath", statement: "Ease the pace of each inhale and exhale, giving yourself permission to take longer than you think you need.", prompt: "Where could I allow myself to move more slowly without losing anything important?" },
+    { n: 9, name: "Exhale the day", statement: "With each breath out, let a little of today's weight leave with it.", prompt: "What weight from today does not need to come with me into tomorrow?" },
+    { n: 10, name: "Fill your lungs", statement: "Draw the breath in deeply, letting your whole chest widen to make room for it.", prompt: "What nourishes me, restores me or helps me feel more alive?" },
+    { n: 11, name: "Breathe out the noise", statement: "Let the exhale carry away some of the mental chatter, even if only for a few seconds.", prompt: "What thought, worry or outside voice would I like to turn down for a while?" },
+    { n: 12, name: "Rest in the pause", statement: "Notice the small gap between one breath and the next, and let yourself rest there.", prompt: "What might I notice in the spaces between doing, speaking or solving?" },
+    { n: 13, name: "Soothe your soul", statement: "Offer yourself the same kindness you would give someone you love who was struggling.", prompt: "What would kindness toward myself look like in this situation?" },
+    { n: 14, name: "Ease the tension", statement: "Invite whatever feels tight or held to loosen, even slightly, even for a moment.", prompt: "Where am I carrying more strain than I need to carry alone?" },
+    { n: 15, name: "Unclench", statement: "Notice anywhere you are gripping or bracing, and let it soften on the next breath out.", prompt: "What am I gripping tightly, and what might happen if I loosened my hold a little?" },
+    { n: 16, name: "Let it soften", statement: "Allow whatever feels hard or defended to become a little more yielding.", prompt: "What part of me has been trying very hard to stay protected?" },
+    { n: 17, name: "Melt a little", statement: "Imagine warmth spreading through you, easing anything stiff or resistant.", prompt: "What could become easier if I let warmth, pleasure or tenderness have a place here?" },
+    { n: 18, name: "Soften your gaze", statement: "Let your eyes rest gently rather than staring or searching, softening the whole face along with them.", prompt: "What changes when I look at myself, another person or this problem with less harshness?" },
+    { n: 19, name: "Let go", statement: "Notice what you have been holding onto, and imagine setting it down, even just for now.", prompt: "What am I ready to stop carrying, even if only for today?" },
+    { n: 20, name: "Put it down", statement: "Whatever you have been carrying, imagine placing it somewhere safe, knowing you can pick it up again later if you choose.", prompt: "What responsibility, worry or expectation could I set aside until I have more energy for it?" },
+    { n: 21, name: "Release the grip", statement: "Notice where you have been holding on tightly, and let your hold loosen, bit by bit.", prompt: "Where have I mistaken holding on for being safe?" },
+    { n: 22, name: "Set it aside", statement: "Move whatever has been demanding your attention to one side, just for this moment.", prompt: "What can wait while I give my attention to what matters most now?" },
+    { n: 23, name: "Untangle", statement: "Let whatever feels knotted or complicated begin to loosen, one small thread at a time.", prompt: "What is one small thread I can pull gently to make this situation less complicated?" },
+    { n: 24, name: "Empty the cup", statement: "Imagine pouring out whatever has filled you up today, making space for something quieter.", prompt: "What has filled me up too much lately, and what would create a little space again?" },
+    { n: 25, name: "Focus", statement: "Bring your attention to one single thing, letting everything else fall gently out of view.", prompt: "What is the one thing that most needs my attention today?" },
+    { n: 26, name: "Narrow to one thing", statement: "Choose one point to rest your attention on, and let the rest of the world blur softly at the edges.", prompt: "What becomes more manageable when I stop trying to solve everything at once?" },
+    { n: 27, name: "Choose this breath", statement: "Let this one breath be the only thing that matters right now.", prompt: "What would help bring me back when my mind races ahead?" },
+    { n: 28, name: "Anchor here", statement: "Find something steady such as a sound, a breath or a feeling, and let it keep you here.", prompt: "What steady thing can I return to when everything feels uncertain?" },
+    { n: 29, name: "Return to now", statement: "If your mind has wandered, gently bring it back to this present moment, without any judgement.", prompt: "Where has my mind wandered, and what is actually needed in the present moment?" },
+    { n: 30, name: "Hold steady", statement: "Stay with what is happening right now, even if it feels uncertain, trusting that steadiness will come.", prompt: "What small practice, boundary or rhythm would help me stay grounded this week?" },
+    { n: 31, name: "Explore", statement: "Allow your curiosity to lead, wondering gently about what might be here for you without needing an answer straight away.", prompt: "What am I curious about, even if I do not yet know where it might lead?" },
+    { n: 32, name: "Widen the view", statement: "Step back a little, letting your perspective open out beyond the immediate moment.", prompt: "What else might be true about this situation that I have not considered?" },
+    { n: 33, name: "Make space", statement: "Create a little room, mentally or physically, for something new to arrive.", prompt: "What do I need to clear, simplify or loosen to welcome something new?" },
+    { n: 34, name: "Welcome what comes", statement: "Meet whatever arises with openness rather than resistance, letting it be here without pushing it away.", prompt: "What feeling, idea or possibility am I being invited to meet without pushing it away?" },
+    { n: 35, name: "Open to receive", statement: "Loosen any resistance to receiving good things, letting yourself be open rather than closed to what might come.", prompt: "What support, pleasure or goodness am I allowed to receive more fully?" },
+    { n: 36, name: "Trust the unfolding", statement: "Let things reveal themselves in their own time, trusting that you do not need to force or rush the process.", prompt: "What can I allow to develop in its own time rather than trying to force an answer now?" }
+  ];
+
+  const navGrid = document.getElementById("nav-grid");
+  const cardsEl = document.getElementById("cards");
+
+  CARDS.forEach((card) => {
+    const link = document.createElement("a");
+    link.href = `#card-${card.n}`;
+    link.textContent = card.n;
+    navGrid.appendChild(link);
+
+    const block = document.createElement("div");
+    block.className = "card-block";
+    block.id = `card-${card.n}`;
+    block.innerHTML = `
+      <h2>${card.n}. ${card.name}</h2>
+      <p class="statement">${card.statement}</p>
+      <p class="prompt-label">Journal prompt</p>
+      <p class="prompt-text">${card.prompt}</p>
+    `;
+    cardsEl.appendChild(block);
+  });
+</script>
+</body>
+</html>
