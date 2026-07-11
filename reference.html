@@ -216,7 +216,7 @@
 <script>
   // ---- passcode gate (casual privacy only, not real security) ---------
 
-  const GATE_PASSCODE = "TAKEABEAT26";
+  const GATE_PASSCODE = "takeabeat26";
   const GATE_STORAGE_KEY = "take-a-beat-premium-unlocked";
 
   if (localStorage.getItem(GATE_STORAGE_KEY) === "yes") {
@@ -227,7 +227,7 @@
     e.preventDefault();
     const input = document.getElementById("gate-input");
     const error = document.getElementById("gate-error");
-    if (input.value === GATE_PASSCODE) {
+    if (input.value.trim().toLowerCase() === GATE_PASSCODE) {
       localStorage.setItem(GATE_STORAGE_KEY, "yes");
       document.body.classList.remove("is-locked");
     } else {
