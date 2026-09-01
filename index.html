@@ -486,6 +486,42 @@
     font-weight: 600;
   }
 
+  .beat-pattern {
+    border: 2px solid var(--gold);
+    border-radius: 14px;
+    background: var(--panel);
+    padding: 1.1rem 1.4rem 1.2rem;
+    box-shadow: 0 10px 24px var(--shadow-tint);
+    margin-bottom: 1.2rem;
+  }
+  .beat-pattern .beat-heading { margin-bottom: 0.8rem; }
+  .beat-pattern-rows { display: flex; flex-direction: column; gap: 0.35rem; }
+  .beat-pattern-row {
+    display: grid;
+    grid-template-columns: 10.5rem 1fr 1.6rem;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.88rem;
+  }
+  .beat-pattern-row.is-empty { opacity: 0.45; }
+  .beat-pattern-label { white-space: nowrap; }
+  .beat-pattern-bar {
+    height: 0.55rem;
+    border-radius: 999px;
+    background: var(--rose);
+    min-width: 0;
+  }
+  .beat-pattern-num { text-align: right; color: var(--ink-soft); }
+  .beat-pattern-foot {
+    margin: 0.9rem 0 0;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+  @media (max-width: 30rem) {
+    .beat-pattern-row { grid-template-columns: 8.5rem 1fr 1.4rem; font-size: 0.8rem; }
+  }
+
   .beat-about {
     width: min(46rem, 100%);
     border: 2px solid var(--gold);
@@ -614,11 +650,12 @@
 
         <h3>How to use this</h3>
         <p>Choose one card for a single thought, three or five for a fuller reading, or Liminal when you are standing between one thing and the next. Press Draw. Read the phrase first and the meaning after.</p>
-        <p>The moon line at the top suggests a mode for the day. You are welcome to ignore it.</p>
+        <p>The line under the date names the phase of the moon and the draw that belongs to it, so you always know how many cards today is asking for. The button carries a ✦ to match. You are welcome to ignore it and choose your own.</p>
         <p>Under the ⚙ you will find a seed. Keep it if you ever want to pull the same reading again.</p>
 
         <h3>Your reflection</h3>
-        <p>Write underneath any reading and press "Keep this reading" to hold it. Everything you keep appears under "Your readings", oldest at the bottom.</p>
+        <p>Write underneath any reading and press "Keep this reading" to hold it. Everything you keep appears under "Your readings", newest at the top.</p>
+        <p>Each one records the phase of the moon you drew under, so once you have a few kept you will find a pattern at the top of that list showing which phases you return to and how often you took the draw the moon asked for.</p>
 
         <h3>Your records</h3>
         <p>Everything you write is held on this device only. Keep a backup so nothing is lost if you change phone, clear your browser or reinstall the app.</p>
@@ -836,11 +873,25 @@
     return phases.find((p) => phase <= p.max);
   }
 
+  // The draw belongs to the named phase, not to a raw fraction, so the same
+  // phase always asks for the same number of cards and the patterns hold.
+  const PHASE_DRAW = {
+    "New Moon":        { mode: "1",       words: "one card" },
+    "Waxing Crescent": { mode: "3",       words: "three cards" },
+    "First Quarter":   { mode: "3",       words: "three cards" },
+    "Waxing Gibbous":  { mode: "5",       words: "five cards" },
+    "Full Moon":       { mode: "5",       words: "five cards" },
+    "Waning Gibbous":  { mode: "3",       words: "three cards" },
+    "Last Quarter":    { mode: "3",       words: "three cards" },
+    "Waning Crescent": { mode: "liminal", words: "a Liminal pair" },
+  };
+
+  function phaseDraw(phaseName) {
+    return PHASE_DRAW[phaseName] || { mode: "3", words: "three cards" };
+  }
+
   function suggestedModeForPhase(phase) {
-    if (phase < 0.25) return "1";
-    if (phase < 0.5) return "3";
-    if (phase < 0.75) return "5";
-    return "liminal";
+    return phaseDraw(moonPhaseInfo(phase).name).mode;
   }
 
   // ---- seasonal wheel (extracted from Barbara's own wheel diagram) ------
@@ -894,7 +945,9 @@
     day: "numeric"
   });
 
-  document.getElementById("moon-line").textContent = `${moonInfo.emoji} ${moonInfo.name}`;
+  const todayDraw = phaseDraw(moonInfo.name);
+  document.getElementById("moon-line").textContent =
+    `${moonInfo.emoji} ${moonInfo.name} ~ ${todayDraw.words} today`;
 
   if (seasonalWeek) {
     document.getElementById("seasonal-line").textContent = `✦ ${seasonalWeek} week`;
@@ -1030,8 +1083,22 @@
     localStorage.setItem(READINGS_KEY, JSON.stringify(list));
   }
 
+  function labelForMode(m) {
+    if (m === "liminal") return "Liminal";
+    return m + (m === "1" ? " Card" : " Cards");
+  }
+
   function openReflection(seed, modeLabel, cards, flow) {
-    currentReading = { seed: seed, mode: modeLabel, cards: cards, flow: flow };
+    currentReading = {
+      seed: seed,
+      mode: modeLabel,
+      cards: cards,
+      flow: flow,
+      moon: moonInfo.name,
+      moonEmoji: moonInfo.emoji,
+      moonDraw: todayDraw.words,
+      followedMoon: modeLabel === labelForMode(todayDraw.mode),
+    };
     const block = document.getElementById("reflection-block");
     document.getElementById("reflection-text").value = "";
     block.classList.add("is-open");
@@ -1043,6 +1110,62 @@
     return d.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
   }
 
+  // A reading is only worth keeping if you can see the shape of them all later.
+  const PHASE_ORDER = [
+    "New Moon", "Waxing Crescent", "First Quarter", "Waxing Gibbous",
+    "Full Moon", "Waning Gibbous", "Last Quarter", "Waning Crescent",
+  ];
+
+  function phaseEmoji(name) {
+    const map = {
+      "New Moon": "🌑", "Waxing Crescent": "🌒", "First Quarter": "🌓",
+      "Waxing Gibbous": "🌔", "Full Moon": "🌕", "Waning Gibbous": "🌖",
+      "Last Quarter": "🌗", "Waning Crescent": "🌘",
+    };
+    return map[name] || "";
+  }
+
+  function patternPanel(list) {
+    const panel = document.createElement("div");
+    panel.className = "beat-pattern";
+    const withMoon = list.filter((r) => r.moon);
+    if (withMoon.length < 2) {
+      panel.style.display = "none";
+      return panel;
+    }
+    const counts = {};
+    withMoon.forEach((r) => { counts[r.moon] = (counts[r.moon] || 0) + 1; });
+    const most = Math.max.apply(null, Object.keys(counts).map((k) => counts[k]));
+    const heading = document.createElement("p");
+    heading.className = "beat-heading";
+    heading.textContent = "Your pattern";
+    const rows = document.createElement("div");
+    rows.className = "beat-pattern-rows";
+    PHASE_ORDER.forEach((name) => {
+      const n = counts[name] || 0;
+      const row = document.createElement("div");
+      row.className = "beat-pattern-row" + (n ? "" : " is-empty");
+      const label = document.createElement("span");
+      label.className = "beat-pattern-label";
+      label.textContent = phaseEmoji(name) + " " + name;
+      const bar = document.createElement("span");
+      bar.className = "beat-pattern-bar";
+      bar.style.width = (n ? Math.max(6, (n / most) * 100) : 0) + "%";
+      const num = document.createElement("span");
+      num.className = "beat-pattern-num";
+      num.textContent = n || "";
+      row.append(label, bar, num);
+      rows.append(row);
+    });
+    const followed = withMoon.filter((r) => r.followedMoon).length;
+    const foot = document.createElement("p");
+    foot.className = "beat-pattern-foot";
+    foot.textContent = withMoon.length + " readings kept. " + followed +
+      " drawn to the number the moon asked for.";
+    panel.append(heading, rows, foot);
+    return panel;
+  }
+
   function renderSaved() {
     const list = getReadings();
     const wrap = document.getElementById("saved-list");
@@ -1051,6 +1174,7 @@
       return;
     }
     wrap.innerHTML = "";
+    wrap.append(patternPanel(list));
     list.slice().reverse().forEach((r) => {
       const el = document.createElement("div");
       el.className = "beat-saved";
@@ -1059,7 +1183,10 @@
       head.className = "beat-saved-head";
       head.innerHTML = "<span></span><span></span>";
       head.children[0].textContent = prettyDate(r.saved);
-      head.children[1].textContent = r.mode || "";
+      head.children[1].textContent = [
+        r.moon ? (r.moonEmoji ? r.moonEmoji + " " : "") + r.moon : "",
+        r.mode || "",
+      ].filter(Boolean).join(" · ");
       const phrase = document.createElement("p");
       phrase.className = "beat-saved-phrase";
       phrase.textContent = r.flow || (r.cards || []).map(c => c.phrase).join(". ");
@@ -1160,8 +1287,9 @@
     const body = list.slice().reverse().map((r) => {
       const cards = (r.cards || []).map((c) =>
         "<li>" + (c.label ? esc(c.label) + ": " : "") + esc(c.id + ". " + c.phrase) + "</li>").join("");
+      const meta = [r.moon ? esc(r.moon) : "", esc(r.mode || "")].filter(Boolean).join(" &middot; ");
       return '<div class="item"><div class="h"><span>' + esc(prettyDate(r.saved)) + "</span><span>" +
-        esc(r.mode || "") + "</span></div>" +
+        meta + "</span></div>" +
         '<div class="q">' + esc(r.flow || "") + "</div>" +
         (cards ? "<ul>" + cards + "</ul>" : "") +
         (r.note ? '<div class="a">' + esc(r.note).replace(/\n/g, "<br>") + "</div>" : "") +
@@ -1198,6 +1326,10 @@
       mode: currentReading.mode,
       cards: currentReading.cards,
       flow: currentReading.flow,
+      moon: currentReading.moon,
+      moonEmoji: currentReading.moonEmoji,
+      moonDraw: currentReading.moonDraw,
+      followedMoon: currentReading.followedMoon,
       note: note,
     });
     saveReadings(list);
