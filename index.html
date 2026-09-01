@@ -421,6 +421,93 @@
     display: none;
   }
 
+  /* ── Reflections, saved readings and About ── */
+  .beat-block {
+    width: min(46rem, 100%);
+    display: none;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .beat-block.is-open { display: flex; }
+
+  .beat-heading {
+    font-family: 'Gabriela', Georgia, serif;
+    font-weight: 400;
+    font-size: 1.05rem;
+    color: var(--rose);
+    margin: 0;
+  }
+
+  .beat-textarea {
+    width: 100%;
+    min-height: 8rem;
+    border: 2px solid var(--gold);
+    border-radius: 14px;
+    background: var(--panel);
+    color: var(--ink);
+    font: inherit;
+    line-height: 1.7;
+    padding: 1rem 1.1rem;
+    resize: vertical;
+    box-shadow: 0 10px 24px var(--shadow-tint);
+  }
+  .beat-textarea:focus { outline: none; border-color: var(--rose); }
+  .beat-textarea::placeholder { color: var(--ink-soft); font-style: italic; }
+
+  .beat-saved {
+    border: 2px solid var(--gold);
+    border-radius: 14px;
+    background: var(--panel);
+    padding: 1.1rem 1.4rem;
+    box-shadow: 0 10px 24px var(--shadow-tint);
+  }
+  .beat-saved-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .beat-saved-phrase {
+    font-family: 'Gabriela', Georgia, serif;
+    font-size: 1.05rem;
+    color: var(--rose);
+    margin: 0.5rem 0 0.4rem;
+  }
+  .beat-saved-note { white-space: pre-wrap; line-height: 1.7; }
+  .beat-saved-actions { margin-top: 0.7rem; }
+  .beat-small {
+    font-size: 0.85rem;
+    padding: 0.45rem 1rem;
+    min-height: 0;
+    font-weight: 600;
+  }
+
+  .beat-about {
+    width: min(46rem, 100%);
+    border: 2px solid var(--gold);
+    border-radius: 14px;
+    background: var(--panel);
+    padding: 1.4rem 1.5rem;
+    box-shadow: 0 10px 24px var(--shadow-tint);
+    line-height: 1.8;
+    text-align: left;
+  }
+  .beat-about h3 {
+    font-family: 'Gabriela', Georgia, serif;
+    font-weight: 400;
+    font-size: 1.1rem;
+    color: var(--rose);
+    margin: 1.4rem 0 0.4rem;
+  }
+  .beat-about h3:first-child { margin-top: 0; }
+  .beat-about p { margin: 0 0 0.7rem; }
+  .beat-about strong { color: var(--rose); font-weight: 700; }
+  .beat-about .credit { color: var(--ink-soft); font-size: 0.9rem; }
+
   .reading-entry {
     border: 2px solid var(--gold);
     border-radius: 14px;
@@ -501,6 +588,57 @@
     <p class="flow-line" id="flow-line"></p>
 
     <div class="reading-panel" id="reading-panel"></div>
+
+    <div class="beat-block" id="reflection-block">
+      <p class="beat-heading">Your reflection</p>
+      <textarea class="beat-textarea" id="reflection-text" placeholder="What does this reading stir in you?"></textarea>
+      <div class="control-row">
+        <button class="beat-small" type="button" id="save-reading-btn">Keep this reading</button>
+      </div>
+    </div>
+
+    <div class="control-row">
+      <button class="beat-small" type="button" id="toggle-saved-btn">Your readings</button>
+      <button class="beat-small" type="button" id="toggle-about-btn">About</button>
+    </div>
+
+    <div class="beat-block" id="saved-block">
+      <p class="beat-heading">Your readings</p>
+      <div id="saved-list"></div>
+    </div>
+
+    <div class="beat-block" id="about-block">
+      <div class="beat-about">
+        <h3>Take a Beat with Barb</h3>
+        <p>A pause, whenever you want one. Draw a card and let the phrase settle before you decide what it means for you today.</p>
+
+        <h3>How to use this</h3>
+        <p>Choose one card for a single thought, three or five for a fuller reading, or Liminal when you are standing between one thing and the next. Press Draw. Read the phrase first and the meaning after.</p>
+        <p>The moon line at the top suggests a mode for the day. You are welcome to ignore it.</p>
+        <p>Under the ⚙ you will find a seed. Keep it if you ever want to pull the same reading again.</p>
+
+        <h3>Your reflection</h3>
+        <p>Write underneath any reading and press "Keep this reading" to hold it. Everything you keep appears under "Your readings", oldest at the bottom.</p>
+
+        <h3>Your records</h3>
+        <p>Everything you write is held on this device only. Keep a backup so nothing is lost if you change phone, clear your browser or reinstall the app.</p>
+        <p><strong>Save a backup</strong> creates a small file of every reading you have kept. On a phone you will be offered the share sheet, so you can send it to your files, your cloud storage or your own email. On a computer it lands in your downloads folder. Do this every few weeks.</p>
+        <p><strong>Restore from a backup</strong> lets you choose a backup file you saved earlier and your readings come back. Anything already kept is added to rather than replaced.</p>
+        <p><strong>Print or save as PDF</strong> opens everything you have kept ready to print, or choose "Save as PDF" in the print dialogue to keep a readable copy.</p>
+        <div class="control-row" style="justify-content:flex-start">
+          <button class="beat-small" type="button" id="export-btn">Save a backup</button>
+          <button class="beat-small" type="button" id="import-btn">Restore from a backup</button>
+          <button class="beat-small" type="button" id="print-btn">Print or save as PDF</button>
+        </div>
+        <input type="file" id="import-file" accept="application/json,.json" style="display:none">
+
+        <h3>Privacy</h3>
+        <p>All your data is saved privately on your device only. Nothing is sent anywhere, so do save yourself a backup now and then.</p>
+
+        <h3>Created by</h3>
+        <p class="credit">Barbara Ford-Hammond ~ hypnotherapist, muse, voiceover, crone.<br>barbaraford-hammond.com</p>
+      </div>
+    </div>
   </div>
 
 <script>
@@ -803,6 +941,12 @@
     flowLine.classList.remove("is-liminal");
     seedLine.textContent = "No draw yet.";
     readingPanel.innerHTML = "";
+    currentReading = null;
+    const rb = document.getElementById("reflection-block");
+    if (rb) {
+      rb.classList.remove("is-open");
+      document.getElementById("reflection-text").value = "";
+    }
   }
 
   function meaningEntry(card, label) {
@@ -846,6 +990,10 @@
       flowLine.textContent = `${leaving.phrase}… and ${arriving.phrase.charAt(0).toLowerCase()}${arriving.phrase.slice(1)}.`;
 
       readingPanel.append(meaningEntry(leaving, "Leaving"), meaningEntry(arriving, "Arriving"));
+      openReflection(seed, "Liminal", [
+        { label: "Leaving", id: leaving.id, phrase: leaving.phrase },
+        { label: "Arriving", id: arriving.id, phrase: arriving.phrase },
+      ], flowLine.textContent);
       return;
     }
 
@@ -862,7 +1010,223 @@
     } else {
       flowLine.textContent = cards.map((c) => c.phrase).join(". ") + ".";
     }
+
+    openReflection(seed, count + (count === 1 ? " Card" : " Cards"),
+      cards.map((c) => ({ label: "", id: c.id, phrase: c.phrase })), flowLine.textContent);
   }
+
+  // ---- reflections, saved readings, backup ----------------------------------
+  const READINGS_KEY = "take-a-beat-readings";
+  let currentReading = null;
+
+  function getReadings() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(READINGS_KEY) || "[]");
+      return Array.isArray(raw) ? raw : [];
+    } catch (e) { return []; }
+  }
+
+  function saveReadings(list) {
+    localStorage.setItem(READINGS_KEY, JSON.stringify(list));
+  }
+
+  function openReflection(seed, modeLabel, cards, flow) {
+    currentReading = { seed: seed, mode: modeLabel, cards: cards, flow: flow };
+    const block = document.getElementById("reflection-block");
+    document.getElementById("reflection-text").value = "";
+    block.classList.add("is-open");
+  }
+
+  function prettyDate(iso) {
+    const d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  }
+
+  function renderSaved() {
+    const list = getReadings();
+    const wrap = document.getElementById("saved-list");
+    if (!list.length) {
+      wrap.innerHTML = '<p class="beat-saved-note" style="opacity:0.7">Nothing kept yet. Draw a reading, write underneath it and press "Keep this reading".</p>';
+      return;
+    }
+    wrap.innerHTML = "";
+    list.slice().reverse().forEach((r) => {
+      const el = document.createElement("div");
+      el.className = "beat-saved";
+      el.style.marginBottom = "0.9rem";
+      const head = document.createElement("div");
+      head.className = "beat-saved-head";
+      head.innerHTML = "<span></span><span></span>";
+      head.children[0].textContent = prettyDate(r.saved);
+      head.children[1].textContent = r.mode || "";
+      const phrase = document.createElement("p");
+      phrase.className = "beat-saved-phrase";
+      phrase.textContent = r.flow || (r.cards || []).map(c => c.phrase).join(". ");
+      el.append(head, phrase);
+      if (r.note) {
+        const note = document.createElement("div");
+        note.className = "beat-saved-note";
+        note.textContent = r.note;
+        el.append(note);
+      }
+      const actions = document.createElement("div");
+      actions.className = "beat-saved-actions";
+      const del = document.createElement("button");
+      del.className = "beat-small reset-button";
+      del.type = "button";
+      del.textContent = "Remove";
+      del.addEventListener("click", () => {
+        if (!confirm("Remove this reading?\n\nThis cannot be undone.")) return;
+        saveReadings(getReadings().filter((x) => x.id !== r.id));
+        renderSaved();
+      });
+      actions.append(del);
+      el.append(actions);
+      wrap.append(el);
+    });
+  }
+
+  function collectAll() {
+    return {
+      app: "take-a-beat",
+      version: 1,
+      exported: new Date().toISOString(),
+      name: getBuyerName(),
+      readings: getReadings(),
+    };
+  }
+
+  function exportReadings() {
+    const d = new Date();
+    const stamp = d.getFullYear() + "-" +
+      String(d.getMonth() + 1).padStart(2, "0") + "-" +
+      String(d.getDate()).padStart(2, "0");
+    const name = "take-a-beat-" + stamp + ".json";
+    const text = JSON.stringify(collectAll(), null, 2);
+    // On a phone the share sheet is friendlier than a download.
+    try {
+      const file = new File([text], name, { type: "application/json" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: "Take a Beat backup" }).catch(() => {});
+        return;
+      }
+    } catch (e) { /* fall through to download */ }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([text], { type: "application/json" }));
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+
+  function importReadings(input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      let data;
+      try { data = JSON.parse(reader.result); }
+      catch (e) { alert("That file could not be read."); input.value = ""; return; }
+      if (!data || data.app !== "take-a-beat" || !Array.isArray(data.readings)) {
+        alert("That does not look like a Take a Beat backup.");
+        input.value = "";
+        return;
+      }
+      const existing = getReadings();
+      const ids = existing.map((x) => x.id);
+      const incoming = data.readings.filter((x) => ids.indexOf(x.id) === -1);
+      if (!confirm("Restore " + incoming.length + (incoming.length === 1 ? " reading" : " readings") +
+                   "?\n\nAnything already kept here stays as it is.")) {
+        input.value = "";
+        return;
+      }
+      // Merge rather than wipe, so restoring never loses what is already here.
+      const merged = existing.concat(incoming).sort((a, b) => String(a.saved).localeCompare(String(b.saved)));
+      saveReadings(merged);
+      input.value = "";
+      renderSaved();
+      document.getElementById("saved-block").classList.add("is-open");
+      alert("Your readings have been restored.");
+    };
+    reader.readAsText(file);
+  }
+
+  function printReadings() {
+    const list = getReadings();
+    if (!list.length) { alert("There is nothing kept yet to print."); return; }
+    const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const body = list.slice().reverse().map((r) => {
+      const cards = (r.cards || []).map((c) =>
+        "<li>" + (c.label ? esc(c.label) + ": " : "") + esc(c.id + ". " + c.phrase) + "</li>").join("");
+      return '<div class="item"><div class="h"><span>' + esc(prettyDate(r.saved)) + "</span><span>" +
+        esc(r.mode || "") + "</span></div>" +
+        '<div class="q">' + esc(r.flow || "") + "</div>" +
+        (cards ? "<ul>" + cards + "</ul>" : "") +
+        (r.note ? '<div class="a">' + esc(r.note).replace(/\n/g, "<br>") + "</div>" : "") +
+        "</div>";
+    }).join("");
+    const w = window.open("", "_blank");
+    if (!w) { alert("Your browser blocked the print window. Allow pop-ups for this app and try again."); return; }
+    const who = getBuyerName();
+    w.document.write(
+      '<!doctype html><html><head><meta charset="utf-8"><title>Take a Beat with Barb</title>' +
+      "<style>body{font-family:Georgia,serif;color:#3A2429;max-width:700px;margin:40px auto;padding:0 24px;line-height:1.7}" +
+      "h1{font-size:22px;letter-spacing:2px;text-transform:uppercase}" +
+      ".item{margin:24px 0;page-break-inside:avoid}" +
+      ".h{display:flex;justify-content:space-between;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8a6a70;border-bottom:1px solid #ddd;padding-bottom:5px}" +
+      ".q{font-style:italic;color:#B76E79;margin-top:8px}ul{margin:8px 0;padding-left:20px;font-size:14px}" +
+      ".a{margin-top:8px}.foot{margin-top:40px;font-size:12px;opacity:0.6}</style></head><body>" +
+      "<h1>Take a Beat with Barb</h1>" +
+      (who ? "<p>" + esc(who) + "</p>" : "") + body +
+      '<div class="foot">Barbara Ford-Hammond ~ barbaraford-hammond.com</div>' +
+      "</body></html>"
+    );
+    w.document.close();
+    setTimeout(() => { w.focus(); w.print(); }, 300);
+  }
+
+  document.getElementById("save-reading-btn").addEventListener("click", () => {
+    if (!currentReading) return;
+    const note = document.getElementById("reflection-text").value.trim();
+    const list = getReadings();
+    list.push({
+      id: "r" + Date.now() + Math.random().toString(36).slice(2, 7),
+      saved: new Date().toISOString(),
+      seed: currentReading.seed,
+      mode: currentReading.mode,
+      cards: currentReading.cards,
+      flow: currentReading.flow,
+      note: note,
+    });
+    saveReadings(list);
+    renderSaved();
+    document.getElementById("saved-block").classList.add("is-open");
+    document.getElementById("reflection-text").value = "";
+    document.getElementById("reflection-block").classList.remove("is-open");
+  });
+
+  document.getElementById("toggle-saved-btn").addEventListener("click", () => {
+    const b = document.getElementById("saved-block");
+    b.classList.toggle("is-open");
+    if (b.classList.contains("is-open")) renderSaved();
+  });
+
+  document.getElementById("toggle-about-btn").addEventListener("click", () => {
+    document.getElementById("about-block").classList.toggle("is-open");
+  });
+
+  document.getElementById("export-btn").addEventListener("click", exportReadings);
+  document.getElementById("print-btn").addEventListener("click", printReadings);
+  document.getElementById("import-btn").addEventListener("click", () => {
+    document.getElementById("import-file").click();
+  });
+  document.getElementById("import-file").addEventListener("change", function () {
+    importReadings(this);
+  });
+
+  renderSaved();
 
   document.getElementById("draw-btn").addEventListener("click", draw);
   document.getElementById("reset-btn").addEventListener("click", () => {
