@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Take a Beat with Barb</title>
+<title>Moon Beat</title>
 <link rel="manifest" href="beat-manifest.json">
 <link rel="apple-touch-icon" href="beat-icon.png">
 <link rel="icon" type="image/png" href="beat-icon.png">
@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Take a Beat">
+<meta name="apple-mobile-web-app-title" content="Moon Beat">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,500&display=swap" rel="stylesheet">
@@ -646,7 +646,7 @@
     </form>
   </div>
 
-  <h1>Take a Beat with Barb</h1>
+  <h1>Moon Beat</h1>
   <p class="subtitle">Join me for a moment</p>
   <p class="today-date" id="today-date"></p>
   <p class="moon-line" id="moon-line"></p>
@@ -699,7 +699,7 @@
 
     <div class="beat-block" id="about-block">
       <div class="beat-about">
-        <h3>Take a Beat with Barb</h3>
+        <h3>Moon Beat</h3>
         <p>A pause, whenever you want one. Draw a card and let the phrase settle before you decide what it means for you today.</p>
 
         <h3>How to use this</h3>
@@ -1302,13 +1302,13 @@
     const stamp = d.getFullYear() + "-" +
       String(d.getMonth() + 1).padStart(2, "0") + "-" +
       String(d.getDate()).padStart(2, "0");
-    const name = "take-a-beat-" + stamp + ".json";
+    const name = "moon-beat-" + stamp + ".json";
     const text = JSON.stringify(collectAll(), null, 2);
     // On a phone the share sheet is friendlier than a download.
     try {
       const file = new File([text], name, { type: "application/json" });
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        navigator.share({ files: [file], title: "Take a Beat backup" }).catch(() => {});
+        navigator.share({ files: [file], title: "Moon Beat backup" }).catch(() => {});
         return;
       }
     } catch (e) { /* fall through to download */ }
@@ -1330,7 +1330,7 @@
       try { data = JSON.parse(reader.result); }
       catch (e) { alert("That file could not be read."); input.value = ""; return; }
       if (!data || data.app !== "take-a-beat" || !Array.isArray(data.readings)) {
-        alert("That does not look like a Take a Beat backup.");
+        alert("That does not look like a Moon Beat backup.");
         input.value = "";
         return;
       }
@@ -1372,14 +1372,14 @@
     if (!w) { alert("Your browser blocked the print window. Allow pop-ups for this app and try again."); return; }
     const who = getBuyerName();
     w.document.write(
-      '<!doctype html><html><head><meta charset="utf-8"><title>Take a Beat with Barb</title>' +
+      '<!doctype html><html><head><meta charset="utf-8"><title>Moon Beat</title>' +
       "<style>body{font-family:Georgia,serif;color:#3A2429;max-width:700px;margin:40px auto;padding:0 24px;line-height:1.7}" +
       "h1{font-size:22px;letter-spacing:2px;text-transform:uppercase}" +
       ".item{margin:24px 0;page-break-inside:avoid}" +
       ".h{display:flex;justify-content:space-between;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8a6a70;border-bottom:1px solid #ddd;padding-bottom:5px}" +
       ".q{font-style:italic;color:#B76E79;margin-top:8px}ul{margin:8px 0;padding-left:20px;font-size:14px}" +
       ".a{margin-top:8px}.foot{margin-top:40px;font-size:12px;opacity:0.6}</style></head><body>" +
-      "<h1>Take a Beat with Barb</h1>" +
+      "<h1>Moon Beat</h1>" +
       (who ? "<p>" + esc(who) + "</p>" : "") + body +
       '<div class="foot">Barbara Ford-Hammond ~ barbaraford-hammond.com</div>' +
       "</body></html>"
