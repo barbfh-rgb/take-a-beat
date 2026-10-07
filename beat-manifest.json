@@ -5,8 +5,8 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#FFF8EC",
-  "theme_color": "#FFF8EC",
+  "background_color": "#0e0720",
+  "theme_color": "#0e0720",
   "icons": [
     {
       "src": "beat-icon.png",
