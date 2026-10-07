@@ -637,8 +637,6 @@
 
   <div class="gate" id="gate">
     <form class="gate-box" id="gate-form">
-      <label class="gate-label" for="gate-name">Your name</label>
-      <input class="gate-input" id="gate-name" type="text" autocomplete="off" placeholder="So Barbara can address your reading personally" required>
       <label class="gate-label" for="gate-input">Enter passcode</label>
       <input class="gate-input" id="gate-input" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" required>
       <button class="gate-button" type="submit">Enter</button>
@@ -762,17 +760,9 @@
 
   document.getElementById("gate-form").addEventListener("submit", (e) => {
     e.preventDefault();
-    const nameInput = document.getElementById("gate-name");
     const input = document.getElementById("gate-input");
     const error = document.getElementById("gate-error");
-    const name = nameInput.value.trim();
-    if (!name) {
-      error.textContent = "Your name is needed before entering.";
-      nameInput.focus();
-      return;
-    }
     if (input.value.trim().toLowerCase() === GATE_PASSCODE) {
-      localStorage.setItem(BUYER_NAME_KEY, name);
       localStorage.setItem(GATE_STORAGE_KEY, "yes");
       document.body.classList.remove("is-locked");
     } else {
