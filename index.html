@@ -1088,7 +1088,6 @@
 
   function draw() {
     const seed = seedInput.value.trim() || newSeed();
-    seedInput.value = seed;
     seedLine.textContent = `Seed: ${seed}. Save this to redraw the exact same reading later.`;
 
     readingPanel.innerHTML = "";
